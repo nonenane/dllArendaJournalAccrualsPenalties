@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.cmbObject = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,10 +43,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.chbCongressAccept = new System.Windows.Forms.CheckBox();
             this.dgvData = new System.Windows.Forms.DataGridView();
-            this.tbAgreement = new System.Windows.Forms.TextBox();
-            this.tbTenant = new System.Windows.Forms.TextBox();
-            this.tbItogPenalty = new System.Windows.Forms.TextBox();
-            this.lItogoPenalty = new System.Windows.Forms.Label();
             this.nameTenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cTypeContract = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cAgreements = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -58,6 +54,10 @@
             this.cPrcPenalty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cSummaPenalty = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cItogPenalty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tbAgreement = new System.Windows.Forms.TextBox();
+            this.tbTenant = new System.Windows.Forms.TextBox();
+            this.tbItogPenalty = new System.Windows.Forms.TextBox();
+            this.lItogoPenalty = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,15 +65,16 @@
             // 
             this.cmbObject.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbObject.FormattingEnabled = true;
-            this.cmbObject.Location = new System.Drawing.Point(676, 26);
+            this.cmbObject.Location = new System.Drawing.Point(355, 26);
             this.cmbObject.Name = "cmbObject";
             this.cmbObject.Size = new System.Drawing.Size(230, 21);
             this.cmbObject.TabIndex = 5;
+            this.cmbObject.SelectionChangeCommitted += new System.EventHandler(this.cmbObject_SelectionChangeCommitted);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(584, 30);
+            this.label3.Location = new System.Drawing.Point(263, 30);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(86, 13);
             this.label3.TabIndex = 4;
@@ -82,7 +83,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(270, 30);
+            this.label1.Location = new System.Drawing.Point(594, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(76, 13);
             this.label1.TabIndex = 4;
@@ -92,10 +93,11 @@
             // 
             this.cmbTypeContract.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbTypeContract.FormattingEnabled = true;
-            this.cmbTypeContract.Location = new System.Drawing.Point(352, 26);
+            this.cmbTypeContract.Location = new System.Drawing.Point(676, 26);
             this.cmbTypeContract.Name = "cmbTypeContract";
             this.cmbTypeContract.Size = new System.Drawing.Size(230, 21);
             this.cmbTypeContract.TabIndex = 5;
+            this.cmbTypeContract.SelectionChangeCommitted += new System.EventHandler(this.cmbObject_SelectionChangeCommitted);
             // 
             // label2
             // 
@@ -114,6 +116,7 @@
             this.cmbPeriodCredit.Name = "cmbPeriodCredit";
             this.cmbPeriodCredit.Size = new System.Drawing.Size(116, 21);
             this.cmbPeriodCredit.TabIndex = 5;
+            this.cmbPeriodCredit.SelectionChangeCommitted += new System.EventHandler(this.cmbPeriodCredit_SelectionChangeCommitted);
             // 
             // btUpdate
             // 
@@ -124,6 +127,7 @@
             this.btUpdate.Size = new System.Drawing.Size(48, 48);
             this.btUpdate.TabIndex = 11;
             this.btUpdate.UseVisualStyleBackColor = true;
+            this.btUpdate.Click += new System.EventHandler(this.btUpdate_Click);
             // 
             // btPrint
             // 
@@ -134,6 +138,7 @@
             this.btPrint.Size = new System.Drawing.Size(32, 32);
             this.btPrint.TabIndex = 12;
             this.btPrint.UseVisualStyleBackColor = true;
+            this.btPrint.Click += new System.EventHandler(this.btPrint_Click);
             // 
             // btExit
             // 
@@ -144,6 +149,7 @@
             this.btExit.Size = new System.Drawing.Size(32, 32);
             this.btExit.TabIndex = 13;
             this.btExit.UseVisualStyleBackColor = true;
+            this.btExit.Click += new System.EventHandler(this.btExit_Click);
             // 
             // btAcceptD
             // 
@@ -154,6 +160,7 @@
             this.btAcceptD.Size = new System.Drawing.Size(48, 48);
             this.btAcceptD.TabIndex = 14;
             this.btAcceptD.UseVisualStyleBackColor = true;
+            this.btAcceptD.Click += new System.EventHandler(this.btAcceptD_Click);
             // 
             // panel2
             // 
@@ -175,6 +182,7 @@
             this.chbCongressAccept.TabIndex = 15;
             this.chbCongressAccept.Text = " - подтвержденные пени";
             this.chbCongressAccept.UseVisualStyleBackColor = true;
+            this.chbCongressAccept.Click += new System.EventHandler(this.chbCongressAccept_Click);
             // 
             // dgvData
             // 
@@ -185,14 +193,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvData.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvData.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvData.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.nameTenant,
@@ -206,58 +214,32 @@
             this.cPrcPenalty,
             this.cSummaPenalty,
             this.cItogPenalty});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvData.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvData.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvData.Location = new System.Drawing.Point(9, 83);
             this.dgvData.MultiSelect = false;
             this.dgvData.Name = "dgvData";
-            this.dgvData.ReadOnly = true;
             this.dgvData.RowHeadersVisible = false;
-            this.dgvData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.dgvData.Size = new System.Drawing.Size(1272, 424);
             this.dgvData.TabIndex = 17;
+            this.dgvData.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.dgvData_CellBeginEdit);
+            this.dgvData.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellEndEdit);
+            this.dgvData.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvData_CellFormatting);
+            this.dgvData.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.dgvData_CellPainting);
+            this.dgvData.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellValidated);
+            this.dgvData.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dgvData_CellValidating);
             this.dgvData.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.dgvData_ColumnWidthChanged);
+            this.dgvData.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dgvData_EditingControlShowing);
             this.dgvData.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dgvData_RowPostPaint);
             this.dgvData.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.dgvData_RowPrePaint);
             this.dgvData.SelectionChanged += new System.EventHandler(this.dgvData_SelectionChanged);
-            // 
-            // tbAgreement
-            // 
-            this.tbAgreement.Location = new System.Drawing.Point(221, 57);
-            this.tbAgreement.Name = "tbAgreement";
-            this.tbAgreement.Size = new System.Drawing.Size(100, 20);
-            this.tbAgreement.TabIndex = 19;
-            // 
-            // tbTenant
-            // 
-            this.tbTenant.Location = new System.Drawing.Point(115, 57);
-            this.tbTenant.Name = "tbTenant";
-            this.tbTenant.Size = new System.Drawing.Size(100, 20);
-            this.tbTenant.TabIndex = 20;
-            // 
-            // tbItogPenalty
-            // 
-            this.tbItogPenalty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbItogPenalty.Location = new System.Drawing.Point(1181, 513);
-            this.tbItogPenalty.Name = "tbItogPenalty";
-            this.tbItogPenalty.Size = new System.Drawing.Size(100, 20);
-            this.tbItogPenalty.TabIndex = 22;
-            // 
-            // lItogoPenalty
-            // 
-            this.lItogoPenalty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lItogoPenalty.AutoSize = true;
-            this.lItogoPenalty.Location = new System.Drawing.Point(1138, 516);
-            this.lItogoPenalty.Name = "lItogoPenalty";
-            this.lItogoPenalty.Size = new System.Drawing.Size(37, 13);
-            this.lItogoPenalty.TabIndex = 4;
-            this.lItogoPenalty.Text = "Итого";
             // 
             // nameTenant
             // 
@@ -268,63 +250,109 @@
             // 
             // cTypeContract
             // 
+            this.cTypeContract.DataPropertyName = "TypeContract";
             this.cTypeContract.HeaderText = "Тип договора";
             this.cTypeContract.Name = "cTypeContract";
             this.cTypeContract.ReadOnly = true;
             // 
             // cAgreements
             // 
+            this.cAgreements.DataPropertyName = "Agreement";
             this.cAgreements.HeaderText = "Номер договора";
             this.cAgreements.Name = "cAgreements";
             this.cAgreements.ReadOnly = true;
             // 
             // cPeriodCredit
             // 
+            this.cPeriodCredit.DataPropertyName = "PeriodCredit";
             this.cPeriodCredit.HeaderText = "Период долга";
             this.cPeriodCredit.Name = "cPeriodCredit";
             this.cPeriodCredit.ReadOnly = true;
             // 
             // cSummaCredit
             // 
+            this.cSummaCredit.DataPropertyName = "SummaCredit";
             this.cSummaCredit.HeaderText = "Сумма долга";
             this.cSummaCredit.Name = "cSummaCredit";
             this.cSummaCredit.ReadOnly = true;
             // 
             // cDatePay
             // 
+            this.cDatePay.DataPropertyName = "datePayContract";
             this.cDatePay.HeaderText = "Дата оплаты";
             this.cDatePay.Name = "cDatePay";
             this.cDatePay.ReadOnly = true;
             // 
             // cSumma
             // 
+            this.cSumma.DataPropertyName = "sumPayContract";
             this.cSumma.HeaderText = "Сумма оплаты";
             this.cSumma.Name = "cSumma";
             this.cSumma.ReadOnly = true;
             // 
             // cCountDaysCredit
             // 
+            this.cCountDaysCredit.DataPropertyName = "CountDaysCredit";
             this.cCountDaysCredit.HeaderText = "Дней просрочки";
             this.cCountDaysCredit.Name = "cCountDaysCredit";
             this.cCountDaysCredit.ReadOnly = true;
             // 
             // cPrcPenalty
             // 
+            this.cPrcPenalty.DataPropertyName = "PercentPenalty";
             this.cPrcPenalty.HeaderText = "% пени";
             this.cPrcPenalty.Name = "cPrcPenalty";
             this.cPrcPenalty.ReadOnly = true;
             // 
             // cSummaPenalty
             // 
+            this.cSummaPenalty.DataPropertyName = "SummaPenalty";
             this.cSummaPenalty.HeaderText = "Сумма пени";
             this.cSummaPenalty.Name = "cSummaPenalty";
             this.cSummaPenalty.ReadOnly = true;
             // 
             // cItogPenalty
             // 
+            this.cItogPenalty.DataPropertyName = "sumItogPenalty";
             this.cItogPenalty.HeaderText = "Итого пени";
             this.cItogPenalty.Name = "cItogPenalty";
             this.cItogPenalty.ReadOnly = true;
+            // 
+            // tbAgreement
+            // 
+            this.tbAgreement.Location = new System.Drawing.Point(221, 57);
+            this.tbAgreement.Name = "tbAgreement";
+            this.tbAgreement.Size = new System.Drawing.Size(100, 20);
+            this.tbAgreement.TabIndex = 19;
+            this.tbAgreement.TextChanged += new System.EventHandler(this.tbTenant_TextChanged);
+            // 
+            // tbTenant
+            // 
+            this.tbTenant.Location = new System.Drawing.Point(115, 57);
+            this.tbTenant.Name = "tbTenant";
+            this.tbTenant.Size = new System.Drawing.Size(100, 20);
+            this.tbTenant.TabIndex = 20;
+            this.tbTenant.TextChanged += new System.EventHandler(this.tbTenant_TextChanged);
+            // 
+            // tbItogPenalty
+            // 
+            this.tbItogPenalty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbItogPenalty.Location = new System.Drawing.Point(1181, 513);
+            this.tbItogPenalty.Name = "tbItogPenalty";
+            this.tbItogPenalty.ReadOnly = true;
+            this.tbItogPenalty.Size = new System.Drawing.Size(100, 20);
+            this.tbItogPenalty.TabIndex = 22;
+            this.tbItogPenalty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // lItogoPenalty
+            // 
+            this.lItogoPenalty.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lItogoPenalty.AutoSize = true;
+            this.lItogoPenalty.Location = new System.Drawing.Point(1138, 516);
+            this.lItogoPenalty.Name = "lItogoPenalty";
+            this.lItogoPenalty.Size = new System.Drawing.Size(37, 13);
+            this.lItogoPenalty.TabIndex = 4;
+            this.lItogoPenalty.Text = "Итого";
             // 
             // frmMain
             // 
@@ -379,6 +407,7 @@
         private System.Windows.Forms.TextBox tbTenant;
         private System.Windows.Forms.TextBox tbItogPenalty;
         private System.Windows.Forms.Label lItogoPenalty;
+        private System.Windows.Forms.ComboBox cmbPeriodCredit;
         private System.Windows.Forms.DataGridViewTextBoxColumn nameTenant;
         private System.Windows.Forms.DataGridViewTextBoxColumn cTypeContract;
         private System.Windows.Forms.DataGridViewTextBoxColumn cAgreements;
@@ -390,7 +419,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cPrcPenalty;
         private System.Windows.Forms.DataGridViewTextBoxColumn cSummaPenalty;
         private System.Windows.Forms.DataGridViewTextBoxColumn cItogPenalty;
-        private System.Windows.Forms.ComboBox cmbPeriodCredit;
     }
 }
 

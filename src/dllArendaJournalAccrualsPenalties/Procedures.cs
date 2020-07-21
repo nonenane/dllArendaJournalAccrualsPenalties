@@ -159,5 +159,63 @@ namespace dllArendaJournalAccrualsPenalties
 
             return dtResult;
         }
+
+        /// <summary>
+        /// Получение списка пений за период
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns>Таблица с данными</returns>        
+        public async Task<DataTable> getPenalty(string period)
+        {
+            ap.Clear();
+            ap.Add(period);
+
+            DataTable dtResult = executeProcedure("[Arenda].[spg_getPenalty]",
+                 new string[1] { "@period" },
+                 new DbType[1] { DbType.String }, ap);
+
+            return dtResult;
+        }
+
+        /// <summary>
+        /// Сохранение тела пенальти
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns>Таблица с данными</returns>        
+        public async Task<DataTable> setPenalty(int id, decimal SummaPenalty, decimal PercentPenalty)
+        {
+            ap.Clear();
+            ap.Add(id);
+            ap.Add(SummaPenalty);
+            ap.Add(PercentPenalty);
+            ap.Add(UserSettings.User.Id);
+
+            DataTable dtResult = executeProcedure("[Arenda].[spg_setPenalty]",
+                 new string[4] { "@id", "@SummaPenalty", "@PercentPenalty","@id_user" },
+                 new DbType[4] { DbType.Int32, DbType.Decimal, DbType.Decimal, DbType.Int32 }, ap);
+
+            return dtResult;
+        }
+
+        /// <summary>
+        /// Подтверждение пений Д
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns>Таблица с данными</returns>        
+        public async Task<DataTable> setFines(int id_Agreements, int id, decimal SummaPenalty, string period)
+        {
+            ap.Clear();
+            ap.Add(id_Agreements);
+            ap.Add(id);
+            ap.Add(SummaPenalty);
+            ap.Add(period);
+            ap.Add(UserSettings.User.Id);
+
+            DataTable dtResult = executeProcedure("[Arenda].[spg_setFines]",
+                 new string[5] { "@id_Agreements", "@id", "@summPenalty", "@period", "@id_user" },
+                 new DbType[5] { DbType.Int32, DbType.Int32, DbType.Decimal, DbType.String, DbType.Int32 }, ap);
+
+            return dtResult;
+        }
     }
 }

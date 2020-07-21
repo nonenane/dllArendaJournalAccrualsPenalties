@@ -48,7 +48,9 @@ CREATE TABLE [Arenda].[j_Penalty](
 	[PercentPenalty]numeric(4,2)	not null,
 	[SummaPenalty]	numeric(12,2)	not null,
 	[id_PaymentContract]	int		not null,
-	[CountDaysCredit]		int		not null
+	[CountDaysCredit]		int		not null,
+	[id_Editor]		int				null,
+	[DateEdit]		datetime		null
  CONSTRAINT [PK_j_Penalty] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
@@ -61,4 +63,7 @@ ALTER TABLE [Arenda].[j_Penalty] ADD CONSTRAINT FK_j_Penalty_id_tPenalty FOREIGN
 GO
 
 ALTER TABLE [Arenda].[j_Penalty] ADD CONSTRAINT FK_j_Penalty_id_PaymentContract FOREIGN KEY (id_PaymentContract)  REFERENCES [Arenda].[j_PaymentContract] (id)
+GO
+
+ALTER TABLE [Arenda].[j_Penalty] ADD CONSTRAINT FK_j_Penalty_id_Editor FOREIGN KEY (id_Editor)  REFERENCES [dbo].[ListUsers] (id)
 GO
