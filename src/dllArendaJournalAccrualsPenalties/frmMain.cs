@@ -231,7 +231,7 @@ namespace dllArendaJournalAccrualsPenalties
 
                 dgvData.Rows[e.RowIndex].DefaultCellStyle.BackColor = rColor;
                 dgvData.Rows[e.RowIndex].DefaultCellStyle.SelectionBackColor = rColor;
-                dgvData.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.Black;
+                dgvData.Rows[e.RowIndex].DefaultCellStyle.SelectionForeColor = Color.Black;               
             }
         }
 
@@ -565,13 +565,15 @@ namespace dllArendaJournalAccrualsPenalties
             int id_payment = (int)dtData.DefaultView[e.RowIndex]["id_payment"];
             int id = (int)dtData.DefaultView[e.RowIndex]["id"];
 
+
             decimal postCountFeedBack = (decimal)dtData.DefaultView[e.RowIndex][preProName];
             if (postCountFeedBack == preCountFeedBack) { isEditCell = false; return; }
 
             if (preProName.Equals("PercentPenalty"))
             {
+                int CountDaysCredit = (int)dtData.DefaultView[e.RowIndex]["CountDaysCredit"];
                 decimal SummaCredit = (decimal)dtData.DefaultView[e.RowIndex]["SummaCredit"];
-                SummaPenalty = (SummaCredit * PercentPenalty) / 100;                
+                SummaPenalty = ((SummaCredit * PercentPenalty) / 100)* CountDaysCredit;                
             }
 
 
@@ -617,6 +619,7 @@ namespace dllArendaJournalAccrualsPenalties
                     row["sumItogPenalty"] = gSum.sumItogPenalty.ToString("0.00");
                 }
             }
+            setFilter();
         }
 
         private void dgvData_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -869,6 +872,19 @@ namespace dllArendaJournalAccrualsPenalties
         private void btExit_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+        }
+
+        private void dgvData_CellEnter(object sender, DataGridViewCellEventArgs e)
+        {
+            if ((new List<string> { "Д" }.Contains(UserSettings.User.StatusCode) && (int)dtData.DefaultView[e.RowIndex]["id_StatusPenalty"] != 3))
+            {
+                if (cSummaPenalty.Index==e.ColumnIndex || cPrcPenalty.Index==e.ColumnIndex)
+                    dgvData.Rows[e.RowIndex].Cells[e.ColumnIndex].ReadOnly = false;else
+                    dgvData.Rows[e.RowIndex].Cells[e.ColumnIndex].ReadOnly = true;
+            } else
+            {
+                dgvData.Rows[e.RowIndex].Cells[e.ColumnIndex].ReadOnly = true;
+            }
         }
     }
 }
