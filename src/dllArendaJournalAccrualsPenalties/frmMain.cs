@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nwuram.Framework.Settings.User;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,13 +28,13 @@ namespace dllArendaJournalAccrualsPenalties
             tp.SetToolTip(btAcceptD, "Подтвердить пени");
 
 
-            dgvData.AllowUserToAddRows = false;
-            dgvData.AllowUserToResizeRows = false;
-            dgvData.RowHeadersVisible = false;
+            //dgvData.AllowUserToAddRows = false;
+            //dgvData.AllowUserToResizeRows = false;
+            //dgvData.RowHeadersVisible = false;
 
-            this.dgvData.CellPainting -= new DataGridViewCellPaintingEventHandler(dgvData_CellPainting);
-            this.dgvData.CellFormatting -= new DataGridViewCellFormattingEventHandler(dgvData_CellFormatting);
-            this.dgvData.Paint += new PaintEventHandler(dataGrid_Paint);
+            //this.dgvData.CellPainting -= new DataGridViewCellPaintingEventHandler(dgvData_CellPainting);
+            //this.dgvData.CellFormatting -= new DataGridViewCellFormattingEventHandler(dgvData_CellFormatting);
+            //this.dgvData.Paint += new PaintEventHandler(dataGrid_Paint);
 
         }
 
@@ -63,8 +64,9 @@ namespace dllArendaJournalAccrualsPenalties
             cmbPeriodCredit.ValueMember = "PeriodCredit";
             cmbPeriodCredit.DataSource = dtPeriodCredit;
 
-            cSummaPenalty.ReadOnly = false;
-            cPrcPenalty.ReadOnly = false;
+            cSummaPenalty.ReadOnly = !new List<string> { "Д" }.Contains(UserSettings.User.StatusCode);
+            cPrcPenalty.ReadOnly = !new List<string> { "Д" }.Contains(UserSettings.User.StatusCode);
+            btAcceptD.Visible = new List<string> { "Д" }.Contains(UserSettings.User.StatusCode);
 
             getData();
         }
@@ -236,17 +238,34 @@ namespace dllArendaJournalAccrualsPenalties
         #region "Объединение"
         private void dgvData_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
-            //e.AdvancedBorderStyle.Bottom = DataGridViewAdvancedCellBorderStyle.None;
-            //if (e.RowIndex < 1 || e.ColumnIndex < 0)
-            //    return;
-            //if (IsTheSameCellValue(e.ColumnIndex, e.RowIndex))
-            //{
-            //    e.AdvancedBorderStyle.Top = DataGridViewAdvancedCellBorderStyle.None;
-            //}
-            //else
-            //{
-            //    e.AdvancedBorderStyle.Top = dgvData.AdvancedCellBorderStyle.Top;
-            //}
+            e.AdvancedBorderStyle.Bottom = DataGridViewAdvancedCellBorderStyle.None;
+            if (e.RowIndex < 1 || e.ColumnIndex < 0)
+                return;
+
+            if (!new List<int>() { nameTenant.Index, cTypeContract.Index, cAgreements.Index, cPeriodCredit.Index, cItogPenalty.Index }.Contains(e.ColumnIndex))
+            {
+                e.AdvancedBorderStyle.Top = dgvData.AdvancedCellBorderStyle.Top;
+                //e.AdvancedBorderStyle.Bottom = dgvData.AdvancedCellBorderStyle.Bottom;
+                if (e.RowIndex == dgvData.Rows.Count - 1)
+                {
+                    e.AdvancedBorderStyle.Bottom = dgvData.AdvancedCellBorderStyle.Bottom;
+                }
+                return;
+            }
+
+            if (IsTheSameCellValue(e.ColumnIndex, e.RowIndex))
+            {
+                e.AdvancedBorderStyle.Top = DataGridViewAdvancedCellBorderStyle.None;
+            }
+            else
+            {
+                e.AdvancedBorderStyle.Top = dgvData.AdvancedCellBorderStyle.Top;
+            }
+
+            if (e.RowIndex == dgvData.Rows.Count - 1)
+            {
+                e.AdvancedBorderStyle.Bottom = dgvData.AdvancedCellBorderStyle.Bottom;
+            }
         }
 
         bool IsTheSameCellValue(int column, int row)
@@ -266,13 +285,18 @@ namespace dllArendaJournalAccrualsPenalties
 
         private void dgvData_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            //if (e.RowIndex == 0)
-            //    return;
-            //if (IsTheSameCellValue(e.ColumnIndex, e.RowIndex))
-            //{
-            //    e.Value = "";
-            //    e.FormattingApplied = true;
-            //}           
+            if (e.RowIndex == 0)
+                return;
+
+
+            if (!new List<int>() { nameTenant.Index, cTypeContract.Index, cAgreements.Index, cPeriodCredit.Index, cItogPenalty.Index }.Contains(e.ColumnIndex))
+            { return; }
+
+            if (IsTheSameCellValue(e.ColumnIndex, e.RowIndex))
+            {
+                e.Value = "";
+                e.FormattingApplied = true;
+            }
         }
         #endregion
 
@@ -535,10 +559,22 @@ namespace dllArendaJournalAccrualsPenalties
         {
             string _proName = dgvData.Columns[e.ColumnIndex].DataPropertyName;
             string nameTitle = dgvData.Columns[e.ColumnIndex].HeaderText;
-           
+
             decimal PercentPenalty = (decimal)dtData.DefaultView[e.RowIndex]["PercentPenalty"];
             decimal SummaPenalty = (decimal)dtData.DefaultView[e.RowIndex]["SummaPenalty"];
             int id_payment = (int)dtData.DefaultView[e.RowIndex]["id_payment"];
+            int id = (int)dtData.DefaultView[e.RowIndex]["id"];
+
+            decimal postCountFeedBack = (decimal)dtData.DefaultView[e.RowIndex][preProName];
+            if (postCountFeedBack == preCountFeedBack) { isEditCell = false; return; }
+
+            if (preProName.Equals("PercentPenalty"))
+            {
+                decimal SummaCredit = (decimal)dtData.DefaultView[e.RowIndex]["SummaCredit"];
+                SummaPenalty = (SummaCredit * PercentPenalty) / 100;                
+            }
+
+
 
             Task<DataTable> task = Config.hCntMain.setPenalty(id_payment, SummaPenalty, PercentPenalty);
             task.Wait();
@@ -556,8 +592,31 @@ namespace dllArendaJournalAccrualsPenalties
                 isEditCell = false;
                 return;
             }
-           
+
             isEditCell = false;
+            
+            if (preProName.Equals("PercentPenalty"))
+            {
+                dtData.DefaultView[e.RowIndex]["SummaPenalty"] = SummaPenalty.ToString("0.00");
+            }
+
+            var groupSumPenalty = dtData.AsEnumerable()
+                    .Where(r => r.Field<int>("id") == id)
+                    .GroupBy(r => new { id = r.Field<int>("id") })
+                    .Select(s => new
+                    {
+                        s.Key.id,
+                        sumItogPenalty = s.Sum(r => r.Field<decimal>("SummaPenalty"))
+                    });
+
+            foreach (var gSum in groupSumPenalty)
+            {
+                EnumerableRowCollection<DataRow> rowCollect = dtData.AsEnumerable().Where(r => r.Field<int>("id") == gSum.id);
+                foreach (DataRow row in rowCollect)
+                {
+                    row["sumItogPenalty"] = gSum.sumItogPenalty.ToString("0.00");
+                }
+            }
         }
 
         private void dgvData_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
@@ -721,30 +780,74 @@ namespace dllArendaJournalAccrualsPenalties
             indexRow++;
 
 
-            foreach (DataGridViewRow row in dgvData.Rows)
+            indexCol = 0;
+            int indexStartRow = indexRow;
+            //foreach (DataGridViewRow row in dgvData.Rows)
+            foreach (DataGridViewColumn col in dgvData.Columns)
             {
-
-                if ((int)dtData.DefaultView[row.Index]["id_StatusPenalty"] == 3)
-                    report.SetCellColor(indexRow, 1, indexRow, maxColumns, panel2.BackColor);
-
-                indexCol = 0;
-                foreach (DataGridViewColumn col in dgvData.Columns)
+                if (col.Visible)
                 {
-                    if (col.Visible)
+                    indexCol++;
+                    indexRow = indexStartRow;
+                    int startMergRow = indexRow;
+                    object tmpValue = null;
+                    int preId = 0;
+                    //foreach (DataGridViewColumn col in dgvData.Columns)
+                    foreach (DataGridViewRow row in dgvData.Rows)
                     {
-                        indexCol++;
-                        if (row.Cells[col.Index].Value is DateTime)
-                            report.AddSingleValue(((DateTime)row.Cells[col.Index].Value).ToShortDateString(), indexRow, indexCol);
-                        else
-                            report.AddSingleValue(row.Cells[col.Index].Value.ToString(), indexRow, indexCol);
+                        if ((int)dtData.DefaultView[row.Index]["id_StatusPenalty"] == 3)
+                            report.SetCellColor(indexRow, 1, indexRow, maxColumns, panel2.BackColor);
+
                         report.SetWrapText(indexRow, indexCol, indexRow, indexCol);
+
+                        if (new List<int>() { nameTenant.Index, cTypeContract.Index, cAgreements.Index, cPeriodCredit.Index, cItogPenalty.Index }.Contains(col.Index))
+                        {
+                            if (indexRow == indexStartRow)
+                            {
+                                tmpValue = row.Cells[col.Index].Value;
+                                preId = (int)dtData.DefaultView[row.Index]["id"];
+                            }
+                            else if (indexRow - indexStartRow == dgvData.Rows.Count - 1)
+                            {
+                                report.Merge(startMergRow, indexCol, indexRow , indexCol);
+
+                                if (tmpValue is DateTime)
+                                    report.AddSingleValue(((DateTime)tmpValue).ToShortDateString(), startMergRow, indexCol);
+                                else
+                                    report.AddSingleValue(tmpValue.ToString(), startMergRow, indexCol);
+                            }
+                            else if (indexRow != indexStartRow)
+                            {
+                                if (!tmpValue.Equals(row.Cells[col.Index].Value) || preId != (int)dtData.DefaultView[row.Index]["id"])
+                                {
+                                    report.Merge(startMergRow, indexCol, indexRow - 1, indexCol);
+
+                                    if (tmpValue is DateTime)
+                                        report.AddSingleValue(((DateTime)tmpValue).ToShortDateString(), startMergRow, indexCol);
+                                    else
+                                        report.AddSingleValue(tmpValue.ToString(), startMergRow, indexCol);
+
+                                    startMergRow = indexRow;
+                                    tmpValue = row.Cells[col.Index].Value;
+                                    preId = (int)dtData.DefaultView[row.Index]["id"];
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (row.Cells[col.Index].Value is DateTime)
+                                report.AddSingleValue(((DateTime)row.Cells[col.Index].Value).ToShortDateString(), indexRow, indexCol);
+                            else
+                                report.AddSingleValue(row.Cells[col.Index].Value.ToString(), indexRow, indexCol);
+                        }
+
+                            
+                        report.SetBorders(indexRow, 1, indexRow, maxColumns);
+                        report.SetCellAlignmentToCenter(indexRow, 1, indexRow, maxColumns);
+                        report.SetCellAlignmentToJustify(indexRow, 1, indexRow, maxColumns);
+                        indexRow++;
                     }
                 }
-
-                report.SetBorders(indexRow, 1, indexRow, maxColumns);
-                report.SetCellAlignmentToCenter(indexRow, 1, indexRow, maxColumns);
-                report.SetCellAlignmentToJustify(indexRow, 1, indexRow, maxColumns);
-                indexRow++;
             }
 
 
